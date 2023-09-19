@@ -1,19 +1,29 @@
 let products = null;
 const loadProducts = () => {
-const dataContainer = document.getElementById("popular-products");
-fetch("https://fakestoreapi.com/products")
-    .then((response) => {
-        if (!response.ok) {
-            throw new Error("Network response was not ok");
-        }
-        return response.json();
-    })
-    .then((data) => {
-        products = data;
-        data.forEach((item) => {
-            const div = document.createElement('div');
-            div.classList.add("p-3", "group", "border");
-            div.innerHTML = `
+    fetch("https://fakestoreapi.com/products")
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            displayProducts(data)
+        })
+        .catch((error) => {
+            console.error("Error fetching data:", error);
+            dataContainer.textContent = "An error occurred while fetching data.";
+        });
+}
+
+loadProducts()
+const displayProducts = (data) => {
+    products = data;
+    const dataContainer = document.getElementById("popular-products");
+    data.forEach((item) => {
+        const div = document.createElement('div');
+        div.classList.add("p-3", "group", "border");
+        div.innerHTML = `
             <div>
                 <div class="relative overflow-hidden">
                     <span class="absolute top-2 left-2 bg-red-600 text-white text-sm p-1">50% OFF</span>
@@ -53,17 +63,9 @@ fetch("https://fakestoreapi.com/products")
                 </div>
             </div>
             `
-            dataContainer.appendChild(div)
-        });
-    
-    })
-    .catch((error) => {
-        console.error("Error fetching data:", error);
-        dataContainer.textContent = "An error occurred while fetching data.";
+        dataContainer.appendChild(div)
     });
 }
-
-loadProducts()
 
 
 // product add to cart function
@@ -103,7 +105,21 @@ function updateCartDisplay(cart) {
     cart.forEach(product => {
         const cartItem = document.createElement('div');
         cartItem.innerHTML = `
-            <p>${product.title} - $${product.price}</p>
+        <div class="flex gap-3">
+            <div class="w-20 h-20">
+            <img class="w-full h-full"
+            src="${product.image}"
+            alt="">
+            </div>
+            <div class="flex">
+                <div>
+                    <p class="font-semibold">${product.title}</p>
+                    <p>1 piece</p>
+                </div>
+                <p>$${product.price}</p>
+            </div>
+        </div>
+            
         `;
         cartElement.appendChild(cartItem);
     });
