@@ -1,3 +1,4 @@
+const nav = document.querySelector('#navigation');
 const sidebar = document.getElementById("side-navbar");
 let navbarOpen = true;
 const toggleSidebar = ()=>{
@@ -49,4 +50,15 @@ prevBtn.onclick = function() {
     slides[i].classList.add("opacity-0");
   };
 
+// sticky navbar
+function stickyNavigation() {
+  if (window.scrollY >= nav.offsetTop) {
+    document.body.style.paddingTop = nav.offsetHeight + 'px';
+    nav.classList.add('fixed', 'top-0');
+  } else if (window.scrollY >= 0) {
+    document.body.style.paddingTop = 0;
+    nav.classList.remove('fixed');
+  }
+}
 
+window.addEventListener('scroll', stickyNavigation);

@@ -1,4 +1,9 @@
 let products = null;
+const singleProductId = 0;
+const subtotal = document.querySelectorAll("#subtotal");
+for (let i = 0; i < subtotal.length; i++) {
+    subtotal[i].innerText = "00.00"
+}
 const loadProducts = () => {
     fetch("https://fakestoreapi.com/products")
         .then((response) => {
@@ -19,7 +24,7 @@ const loadProducts = () => {
 loadProducts()
 const displayProducts = (data) => {
     products = data;
-    const dataContainer = document.getElementById("popular-products");
+    const dataContainer = document.querySelectorAll("#products");
     data.forEach((item) => {
         const div = document.createElement('div');
         div.classList.add("p-3", "group", "border");
@@ -49,10 +54,12 @@ const displayProducts = (data) => {
                         <button onclick="addToCart(${item.id})" class="bg-black text-white px-4 py-3">Add to cart</button>
                     </div>
                     <div class="border-b h-[300px] p-3">
+                    <a href="/pages/product-details.html">
                     <img class="w-full object-contain h-full"
                         src="${item.image}"
                         alt="">
                     </div>
+                    </a>
                 </div>
                 <div class="mt-3 text-center">
                     <h2 class="font-semibold line-clamp-2">${item.title}</h2>
@@ -63,13 +70,15 @@ const displayProducts = (data) => {
                 </div>
             </div>
             `
-        dataContainer.appendChild(div);
+        for (let i = 0; i < dataContainer.length; i++) {
+            dataContainer[0].appendChild(div);
+        }
     });
 }
 // display the single products
 const loadSingleProduct = () => {
     const dataContainer = document.getElementById("details-field");
-    fetch("https://fakestoreapi.com/products/5")
+    fetch(`https://fakestoreapi.com/products/1`)
         .then((response) => {
             if (!response.ok) {
                 throw new Error("Network response was not ok");
@@ -202,7 +211,7 @@ const loadSingleProduct = () => {
         });
 }
 
-loadSingleProduct()
+loadSingleProduct();
 
 
 // display categories
@@ -228,7 +237,7 @@ const setImageWithCategory = (item) => {
 
 const loadCategories = () => {
     const dataContainer = document.getElementById("popular-categories");
-    
+
     fetch("https://fakestoreapi.com/products/categories")
         .then((response) => {
             if (!response.ok) {
@@ -241,11 +250,11 @@ const loadCategories = () => {
                 const element = document.createElement('div');
                 setImageWithCategory(item)
                 element.innerHTML = `
-                <a href="/pages/category.html" class="h-[200px] w-[200px] rounded p-2 flex flex-col items-center text-center justify-center hover:bg-gray-50 transtion-all border">
-                    <img class="w-20 h-20 object-contain"
+                <a href="/pages/category.html" class="h-[100px] w-[100px] lg:h-[200px] lg:w-[200px] rounded p-2 flex flex-col items-center text-center justify-center hover:bg-gray-50 transtion-all border">
+                    <img class="h-10 w-10 lg:w-20 lg:h-20 object-contain"
                         src="${categoryImage}"
                         alt="">
-                    <p class="font-semibold mt-3">${item}</p>
+                    <p class="text-sm line-clamp-1 font-semibold mt-3">${item}</p>
                 </a>
                 `
                 dataContainer.appendChild(element)
@@ -306,7 +315,10 @@ function removeFromCart(productId) {
 function updateCartDisplay(cart) {
     const cartElement = document.getElementById('cart-product-list');
     cartElement.innerHTML = '';
-    document.getElementById('cart-count').innerHTML = cart.length;
+    const cartCount = document.querySelectorAll('#cart-count');
+    for (let i = 0; i < cartCount.length; i++) {
+        cartCount[i].innerHTML = cart.length;
+    }
 
     if (cart.length === 0) {
         cartElement.textContent = 'Your cart is empty.';
@@ -343,8 +355,9 @@ function updateCartDisplay(cart) {
         `;
         cartElement.appendChild(element);
     });
-
-    document.getElementById("subtotal").innerText = `Total: $${cartTotal.toFixed(2)}`
+    for (let i = 0; i < subtotal.length; i++) {
+        subtotal[i].innerText = cartTotal.toFixed(2)
+    }
 }
 
 const initialCart = getCartFromLocalStorage();
